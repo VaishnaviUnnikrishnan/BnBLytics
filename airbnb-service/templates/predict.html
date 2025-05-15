@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Price Predictor</title>
+    <style>
+        body {
+            background-color: #1c1c1c; /* Matte Black */
+            color: white;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+        h1 {
+            color: #8B0000; /* Wine Red */
+            margin-bottom: 20px;
+        }
+        form {
+            background-color: #2e2e2e;
+            padding: 20px;
+            border-radius: 10px;
+            display: inline-block;
+            margin-bottom: 30px;
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            color: white;
+        }
+        select, input[type=number] {
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            width: 200px;
+            margin-bottom: 15px;
+        }
+        button {
+            background-color: #8B0000;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #a40000;
+        }
+        .result {
+            margin-top: 30px;
+        }
+        .graphs {
+            margin-top: 20px;
+        }
+        img {
+            margin: 10px;
+            border-radius: 10px;
+            max-width: 500px;
+            width: 90%;
+        }
+        .metrics {
+            background-color: #2e2e2e;
+            padding: 20px;
+            margin-top: 30px;
+            border-radius: 10px;
+            display: inline-block;
+            text-align: left;
+        }
+        .metrics h3 {
+            color: #8B0000;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        .metrics p {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Airbnb Price Predictor</h1>
+
+    <form method="POST">
+        <label for="room_type">Select Room Type:</label>
+        <select name="room_type" required>
+            {% for rt in room_types %}
+            <option value="{{ rt }}">{{ rt }}</option>
+            {% endfor %}
+        </select>
+
+        <label for="minimum_nights">Enter Minimum Nights:</label>
+        <input type="number" name="minimum_nights" required min="1">
+
+        <br><br>
+        <button type="submit">Predict</button>
+    </form>
+
+    {% if predicted_price %}
+    <div class="result">
+        <h2>Predicted Price: ${{ predicted_price | round(2) }}</h2>
+
+        <div class="graphs">
+            <h3>Prediction Graphs:</h3>
+            {% if graph1 %}
+                <img src="data:image/png;base64,{{ graph1 }}">
+            {% endif %}
+            {% if graph2 %}
+                <img src="data:image/png;base64,{{ graph2 }}">
+            {% endif %}
+            {% if graph3 %}
+                <img src="data:image/png;base64,{{ graph3 }}">
+            {% endif %}
+        </div>
+
+        <div class="metrics">
+            <h3>Performance Metrics</h3>
+            <p><strong>Mean Absolute Error (MAE):</strong> {{ metrics['MAE'] }}</p>
+            <p><strong>Root Mean Squared Error (RMSE):</strong> {{ metrics['RMSE'] }}</p>
+            <p><strong>R² Score:</strong> {{ metrics['R2'] }}</p>
+            <p><strong>Precision:</strong> {{ metrics['Precision'] }}</p>
+            <p><strong>Recall:</strong> {{ metrics['Recall'] }}</p>
+            <p><strong>F1 Score:</strong> {{ metrics['F1 Score'] }}</p>
+            <p><strong>Accuracy:</strong> {{ metrics['Accuracy'] }}</p>
+        </div>
+    </div>
+    {% endif %}
+
+</body>
+</html>
